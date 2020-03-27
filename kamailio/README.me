@@ -1,0 +1,6 @@
+run:
+docker run --name kamailio -d --network=host feiwu/kamailio
+
+init db:
+docker exec -it kamailio /bin/bash
+=> doc: https://kamailio.org/docs/tutorials/devel/kamailio-install-guide-deb/#configuration-files

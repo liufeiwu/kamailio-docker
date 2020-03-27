@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  kamailio:
+    image: kamailio
+    restart: unless-stopped
+    build:
+      context: ./kamailio
+      dockerfile: Dockerfile
+    volumes:
+      - '/etc/kamailio'
+    network_mode: host
+    environment:
+      - SIP_DOMAIN
+      - DOCKER_HOST_IP
+      - MYSQL_ROOT_PASS
+    depends_on:
+      - db
+
+  db:
+    image: db
+    restart: unless-stopped
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - '/var/lib/mysql'
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+    ports:
+      - "${MYSQL_PORT}:3306"      
+    networks:
+      kamailio:
+
+networks:
+  kamailio:
